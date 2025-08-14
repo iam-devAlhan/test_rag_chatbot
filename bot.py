@@ -41,7 +41,6 @@ class FriendliLLM(LLM):
 
 # --- Load environment variables ---
 
-# --- Setup embeddings + Chroma ---
 embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
 
 vector_store = Chroma(
@@ -52,12 +51,12 @@ vector_store = Chroma(
     database=database
 )
 
-# --- Use Friendli endpoint ---
+
 llm = FriendliLLM(endpoint_id="depr5042pti8evf")
 
 retriever = vector_store.as_retriever(search_type="similarity", search_kwargs={"k": 3})
 
-# --- Prompt ---
+
 template = """You are a helpful assistant. Answer the following question from the context below concisely.
 
 Context:
@@ -70,11 +69,11 @@ Answer:
 """
 prompt = PromptTemplate(template=template, input_variables=["context", "input"])
 
-# --- Build chain ---
+
 doc_chain = create_stuff_documents_chain(llm, prompt)
 retrieval_chain = create_retrieval_chain(retriever=retriever, combine_docs_chain=doc_chain)
 
-# --- Run query ---
+
 def get_answer(q):
     answer = retrieval_chain.invoke({"input": q})
     return answer["answer"]
