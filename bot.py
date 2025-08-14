@@ -44,7 +44,7 @@ question:
 {question}
 
 Answer:
-""".strip()
+"""
 
 prompt = PromptTemplate(template=template, input_variables=["context", "question"])
 
